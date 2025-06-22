@@ -9,9 +9,14 @@ on:
 jobs:
   add-daily-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
         
       - name: Configure Git
         run: |
@@ -29,4 +34,4 @@ jobs:
           # Commit and push changes
           git add update.txt
           git commit -m "Daily automated update: $DATE"
-          git push
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
